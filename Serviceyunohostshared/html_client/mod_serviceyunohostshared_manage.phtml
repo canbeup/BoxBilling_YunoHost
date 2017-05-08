@@ -1,0 +1,51 @@
+{% if order.status == 'active' %}
+{% set server = client.serviceyunohostshared_server_get({"order_id":order.id}) %}
+
+	<p class="text-center">
+		<a class="btn btn-lg btn-success" href="https://{{ server.hostname }}/yunohost/sso" target="_blank">{% trans 'Rendez-vous dans votre cloud individuel' %}</a><br />
+		Your username is <strong>{{ server.username }}</strong>
+	</p>
+	<hr>
+        <div class="row">
+            <div class="col-lg-12">
+			
+                <ul id="myTab" class="nav nav-tabs nav-justified">
+					<li class="active"><a href="#tab-apps" data-toggle="tab"><i class="fa fa-cubes"></i> {% trans 'Apps' %}</a></li>
+					<li><a href="#tab-password" data-toggle="tab"><i class="fa fa-key"></i> {% trans 'Change password' %}</a></li>
+                </ul>
+
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="tab-apps">
+						<h4>{% trans 'Link to services' %}</h4>
+						<div class="well">
+							<ul>
+							{% for path, app in server.apps %}
+								<li><a href="https://{{ server.hostname }}{{ path }}" target="blank">{{ app }}</a></li>
+							{% endfor %}
+							</ul>
+						</div>
+					</div>
+                    <div class="tab-pane fade" id="tab-password">
+                        <h4>{% trans 'Change password' %}</h4>
+						<form method="post" action="{{ 'api/client/serviceyunohostshared/change_password'|link }}" class="api-form" data-api-msg="{% trans 'User password changed' %}">		
+							<div class="well">
+								<div class="control-group form-group">
+									<div class="controls">
+										<label>{% trans 'New password' %}: </label>
+										<input type="password" class="form-control" name="new_password" value="" required="required">
+									</div>
+								</div>
+								<input type="hidden" name="order_id" value="{{ order.id }}" />
+								<div class="text-center">
+									<input class="btn btn-primary" type="submit" value="{% trans 'Change password' %}">
+								</div>
+							</div>
+						</form>
+						
+					</div>
+                </div>
+
+            </div>
+        </div>
+
+{% endif %}

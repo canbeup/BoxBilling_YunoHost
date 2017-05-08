@@ -1,0 +1,30 @@
+{% extends "layout_default.phtml" %}
+{% set active_menu = 'system' %}
+
+{% block breadcrumbs %}
+<ul>
+    <li class="firstB"><a href="{{ '/'|alink }}">{% trans 'Home' %}</a></li>
+    <li><a href="{{ 'serviceyunohostshared'|alink }}">{% trans 'YunoHost Shared servers' %}</a></li>
+    <li class="lastB">{{ server.name }} stats</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="widget">
+    <div class="head">
+        <h5>Server stats</h5>
+    </div>
+	{% if server.stats %}
+	<ul>
+		<li><strong>Uptime</strong>: {{ server.stats.uptime }}</li>
+		<li><strong>CPU</strong>: {{ server.stats.cpu15 }}% 15mins</li>
+		<li><strong>RAM</strong>: {{ server.stats.memory }}%</li>
+		<li><strong>HDD</strong>: {{ server.stats.disk_used }}/{{ server.stats.disk_total }} GB</li>
+	</ul>
+	{% else %}
+		{% trans 'The server cannot be reached' %}
+	{% endif %}
+
+</div>
+
+{% endblock %}

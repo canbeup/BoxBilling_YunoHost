@@ -1,0 +1,81 @@
+{% extends request.ajax ? "layout_blank.phtml" : "layout_default.phtml" %}
+{% import "macro_functions.phtml" as mf %}
+{% block meta_title %}{{product.title}}{% endblock %}
+
+{% block content_before %}
+		<!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ product.title }}</h1>
+				{#{ product.description|bbmd }#}
+				{% include "partial_steps.phtml" with {'selected': 2, 'product': product} %}
+            </div>
+        </div>
+        <!-- /.row -->
+{% endblock %}
+{% block content %}
+
+{% set periods = guest.system_periods %}
+{% set pricing = product.pricing %}
+
+<form method="post" action="" id="yunohostshared">
+	<div class="row">
+		<div class="tab-content text-center well col-sm-12 col-md-8">
+				<h4>{% trans 'Create your account' %}</h4>
+				<p>{% trans 'For security reasons, your cloud account will be distinct to your payment account.' %}</p>
+				<p><input type="text" class="form-control" name="username" value="{{ request.username }}" placeholder="{% trans 'Enter a username' %}" required="true"></p>
+				<!--<p><input type="password" class="form-control" name="password" value="" placeholder="{% trans 'Enter a 4+ characters password' %}" required="true">
+				<input type="password" class="form-control" name="password_retype" value="" placeholder="{% trans 'Retype the password' %}" required="true"></p>-->
+		</div>
+		<div class="col-sm-12 col-md-4 text-center">
+			{% include 'partial_currency.phtml' %}
+			<hr>
+			{% include 'partial_pricing.phtml' with {'product': product} %}
+			{% if stock <= 0 %}
+				<span class="btn btn-warning btn-lg disabled">{% trans 'Sold out' %}</span>
+			{% else %}
+				{% if product.addons|length > 0 %}
+					<button class="btn btn-success btn-lg" type="submit" id="order-button">{% trans 'Continue' %}</button>
+				{% else %}
+					<button class="btn btn-success btn-lg" type="submit" id="order-button">{% trans 'Order' %}</button>
+				{% endif %}
+				<p style="color:white;"><strong>{{stock}}</strong> {% trans 'available' %}</p>
+			{% endif %}
+		</div>
+	</div>
+		{% include 'partial_addons.phtml' with {'product': product} %}
+		
+		<input type="hidden" name="id" value="{{ product.id }}" />
+	</form>
+{% endblock %}
+
+{% block js %}
+{% set currency = guest.cart_get_currency %}
+<script type="text/javascript">
+$(function() {
+
+	$('#yunohostshared').submit(function() {
+        var username = $('input[name="username"]').val();
+		//var password = $('input[name="password"]').val();
+		//var password_retype = $('input[name="password_retype"]').val();
+
+		bb.post(
+            'guest/serviceyunohostshared/check_creation',
+            { username: username },
+            function(result) {
+                bb.post(
+					'guest/cart/add_item',
+					$('#yunohostshared').serialize(),
+					function(result) {
+						bb.redirect('{{ 'cart'|link }}');
+					}
+				);
+				return true;
+            }
+        );
+		return false;
+    });
+
+});
+</script>
+{% endblock %}

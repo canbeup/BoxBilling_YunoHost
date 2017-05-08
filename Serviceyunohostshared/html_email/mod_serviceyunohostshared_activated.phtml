@@ -1,0 +1,27 @@
+{% block subject %}[{{ guest.system_company.name }}]Votre offre {{ order.title }} est activée{% endblock %}
+{% block content %}
+{% filter markdown %}
+
+Bonjour {{ c.first_name }} {{ c.last_name }},
+
+Votre offre **{{ order.title }}** est activée.
+
+Voici les identifiants qui vous permettront de vous y connecter :
+----------------
+
+Adresse de votre cloud : {{ hostname }}
+
+Nom d'utilisateur : {{ username }}
+
+Mot de passe : Celui que vous avez entré
+
+///
+
+Vous pouvez changer votre mot de passe à tout moment : {{ 'order/service/manage'|link }}/{{ order.id }}
+
+Votre espace client : {{'login'|link({'email' : c.email }) }}
+
+{{ guest.system_company.signature }}
+
+{% endfilter %}
+{% endblock %}

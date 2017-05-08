@@ -1,0 +1,43 @@
+<div class="help">
+    <h5>{% trans 'Stock control settings' %}</h5>
+</div>
+
+<form method="post" action="admin/serviceyunohostshared/product_update" class="mainForm api-form save" data-api-msg="Settings updated">
+<fieldset>
+    <div class="rowElem noborder">
+        <label>{% trans 'Show stock' %}:</label>
+        <div class="formRight">
+            <input type="radio" name="show_stock" value="1"{% if product.config.show_stock %} checked="checked"{% endif %}/><label>Yes</label>
+            <input type="radio" name="show_stock" value="0"{% if not product.config.show_stock %} checked="checked"{% endif %} /><label>No</label>
+        </div>
+        <div class="fix"></div>
+    </div>
+	
+	<div class="rowElem noborder">
+        <label>{% trans 'Server group name' %}:</label>
+        <div class="formRight">
+			{% set groups = admin.serviceyunohostshared_server_groups() %}
+			<select name="group">
+			{% for group in groups %}
+				<option value="{{group.group}}"{% if product.config.group %} checked="checked"{% endif %}>{{group.group}}</option>
+			{% endfor %}
+			</select>
+
+        </div>
+        <div class="fix"></div>
+    </div>
+	
+	<div class="rowElem noborder">
+        <label>{% trans 'Filling method' %}:</label>
+        <div class="formRight">
+            <input type="radio" name="filling" value="least"{% if product.config.filling %} checked="checked"{% endif %}/><label>Least filled server</label>
+            <input type="radio" name="filling" value="full"{% if not product.config.filling %} checked="checked"{% endif %} /><label>Fill each server up</label>
+        </div>
+        <div class="fix"></div>
+    </div>
+    
+    <input type="submit" value="{% trans 'Update' %}" class="greyishBtn submitForm" />
+</fieldset>
+    
+<input type="hidden" name="id" value="{{ product.id }}" />
+</form>

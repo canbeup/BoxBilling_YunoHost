@@ -1,0 +1,7 @@
+{
+    "id":           "serviceyunohostshared",
+	"type":         "mod",
+    "name":         "YunoHost Shared Accounts",
+    "description":  "YunoHost Shared Accounts",
+    "version":      "1.0.0"
+}
